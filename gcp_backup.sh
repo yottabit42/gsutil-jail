@@ -13,6 +13,8 @@
 #
 # Jacob McDonald
 # Revision 170422a-yottabit
+#
+# Licensed under BSD-3-Clause, the Modified BSD License
 
 # Define the root directory of your backups here
 backupRoot="/config"
