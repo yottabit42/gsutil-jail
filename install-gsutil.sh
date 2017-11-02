@@ -25,7 +25,7 @@ else
   exit
 fi
 
-/usr/sbin/pkg update || exit
+/usr/sbin/pkg update
 /usr/sbin/pkg upgrade --yes || exit
 /usr/sbin/pkg install --yes google-cloud-sdk || exit
 /usr/sbin/pkg clean --yes || exit
@@ -33,8 +33,18 @@ fi
 gcloud init || exit
 
 # add python path to crontab first
-sed -i '' -e 's~^PATH=.*~&:/usr/local/bin~' /etc/crontab || exit
-echo "42 02 * * * root \"$configDir/gcp_backup.sh\" \
->> \"$configDir/gcp_backup.log\" 2>&1" >> /etc/crontab || exit
-
+if grep '/usr/local/bin' "/etc/crontab"; then
+  echo 'Python already in crontab path'
+else
+  sed -i '' -e 's~^PATH=.*~&:/usr/local/bin~' /etc/crontab || exit
+fi
+# add trigger to crontab
+# default crontab trigger is daily at 0242 localtime
+if grep 'gcp_backup.sh' "/etc/crontab"; then
+  echo 'gcp_backup.sh already in crontab'
+else
+  echo "42 02 * * * root \"$configDir/gcp_backup.sh\" \
+  >> \"$configDir/gcp_backup.log\" 2>&1" >> /etc/crontab || exit
+fi
+# kickoff the initial backup
 "$configDir/gcp_backup.sh"
