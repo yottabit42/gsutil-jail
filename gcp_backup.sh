@@ -20,7 +20,7 @@
 backupRoot="/config"
 
 # Define the Google Cloud Storage bucket name
-bucketName="gs://your-buckup-name"
+bucketName="gs://your-bucket-name"
 
 # Do some checks to ensure backup datasets are mounted
 [ ! -d "$backupRoot/Documents" ] && \
