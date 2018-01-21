@@ -11,7 +11,7 @@
 # https://docs.google.com/document/d/1LSr3J6hdnCDQHfiH45K3HMvEqzbug7GeUeDa_6b_Hhc
 #
 # Jacob McDonald
-# Revision 171102a-yottabit
+# Revision 180121a-yottabit
 #
 # Licensed under BSD-3-Clause, the Modified BSD License
 
@@ -27,8 +27,16 @@ fi
 
 /usr/sbin/pkg update
 /usr/sbin/pkg upgrade --yes || exit
-/usr/sbin/pkg install --yes google-cloud-sdk || exit
+# Current version 183.0.0 is broken
+# See https://issuetracker.google.com/issues/72263635
+#/usr/sbin/pkg install --yes google-cloud-sdk || exit
 /usr/sbin/pkg clean --yes || exit
+
+# Install old version 94.0.0 of google-cloud-sdk for now
+/usr/local/bin/curl --output google-cloud-sdk-94.0.0.0.txz \
+http://pkg.freebsd.org/FreeBSD:11:amd64/release_0/All/google-cloud-sdk-94.0.0.txz
+/usr/sbin/pkg install --yes ./google-cloud-sdk-94.0.0.0.txz
+rm ./google-cloud-sdk-94.0.0.0.txz
 
 gcloud init || exit
 
